@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://35.184.217.217:5432/psql-binar
+    username: postgres
+    password: '6284postgresA#'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
