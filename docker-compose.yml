@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  java-app:
+    container_name: student-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: student-service-2:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-cloud-network
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+networks:
+  spring-cloud-network:
+    driver: bridge

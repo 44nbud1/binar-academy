@@ -3,24 +3,28 @@ package com.binar.admin.student.controller;
 import com.binar.admin.student.dto.StudentRequestDTO;
 import com.binar.admin.student.dto.StudentResponseDTO;
 import com.binar.admin.student.entity.Student;
+import com.binar.admin.student.repository.StudentRedisRepo;
 import com.binar.admin.student.repository.StudentRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @RequestMapping("/api/v1/students")
 @RestController
 public class StudentController {
 
-    private final StudentRepository studentRepository;
+    private StudentRedisRepo studentRedisRepo;
+    private StudentRepository studentRepository;
 
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
 
     @PostMapping
     public ResponseEntity<?> createStudent(@RequestBody StudentRequestDTO studentRequestDTO) {
@@ -47,8 +51,6 @@ public class StudentController {
 
         List<Student> studentList = studentRepository.findAll();
 
-
-
         List<StudentResponseDTO> studentResponseDTOS = new ArrayList<>();
 
         studentList.forEach(data -> {
@@ -60,10 +62,27 @@ public class StudentController {
             );
         });
 
-        studentResponseDTOS.forEach(a -> {
-            System.out.println(a);
-        });
-
         return ResponseEntity.ok(studentResponseDTOS);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStudentByID(@PathVariable("id") String id) {
+
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
+        Student studentRedis = studentRedisRepo.findItemById(id);
+
+        if (studentRedis != null) {
+            studentResponseDTO.setId(studentRedis.getId());
+            studentResponseDTO.setName("REDIS-" + studentRedis.getName());
+        } else {
+            Optional<Student> student = studentRepository.findById(id);
+            student.ifPresent(std -> {
+                studentResponseDTO.setId(std.getId());
+                studentResponseDTO.setName(std.getName());
+                studentRedisRepo.save(std);
+            });
+        }
+
+        return  ResponseEntity.ok(studentResponseDTO);
     }
 }
