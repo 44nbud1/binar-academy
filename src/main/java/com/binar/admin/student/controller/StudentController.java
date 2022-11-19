@@ -18,15 +18,19 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@RequestMapping("/api/v1/students")
+@RequestMapping("/")
 @RestController
 public class StudentController {
 
     private StudentRedisRepo studentRedisRepo;
     private StudentRepository studentRepository;
 
+    @GetMapping
+    public ResponseEntity<?> getHome() {
+        return ResponseEntity.ok("Welcome to my website");
+    }
 
-    @PostMapping
+    @PostMapping("/api/v1/students")
     public ResponseEntity<?> createStudent(@RequestBody StudentRequestDTO studentRequestDTO) {
 
         String id = UUID.randomUUID().toString();
@@ -46,7 +50,7 @@ public class StudentController {
 
     }
 
-    @GetMapping
+    @GetMapping("/api/v1/students")
     public ResponseEntity<?> getStudentList() {
 
         List<Student> studentList = studentRepository.findAll();
