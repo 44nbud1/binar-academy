@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: student-service-2:latest
+    image: student-service-3:latest
     ports:
       - "8080:8080"
     networks:
