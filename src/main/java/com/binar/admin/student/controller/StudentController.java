@@ -24,7 +24,7 @@ public class StudentController {
 
     @GetMapping("/")
     public ResponseEntity<?> getHome() {
-        return ResponseEntity.ok("Welcome to my website");
+        return ResponseEntity.ok("Welcome to my website \n in order to get all student use endpoint /api/v1/students(GET) \n in order to add student use endpoint /api/v1/students (POST)");
     }
 
     @PostMapping("/api/v1/students")
