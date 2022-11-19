@@ -3,7 +3,6 @@ package com.binar.admin.student.controller;
 import com.binar.admin.student.dto.StudentRequestDTO;
 import com.binar.admin.student.dto.StudentResponseDTO;
 import com.binar.admin.student.entity.Student;
-import com.binar.admin.student.repository.StudentRedisRepo;
 import com.binar.admin.student.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,14 +17,12 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@RequestMapping("/")
 @RestController
 public class StudentController {
 
-    private StudentRedisRepo studentRedisRepo;
     private StudentRepository studentRepository;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getHome() {
         return ResponseEntity.ok("Welcome to my website");
     }
@@ -73,19 +70,12 @@ public class StudentController {
     public ResponseEntity<?> getStudentByID(@PathVariable("id") String id) {
 
         StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
-        Student studentRedis = studentRedisRepo.findItemById(id);
 
-        if (studentRedis != null) {
-            studentResponseDTO.setId(studentRedis.getId());
-            studentResponseDTO.setName("REDIS-" + studentRedis.getName());
-        } else {
-            Optional<Student> student = studentRepository.findById(id);
-            student.ifPresent(std -> {
-                studentResponseDTO.setId(std.getId());
-                studentResponseDTO.setName(std.getName());
-                studentRedisRepo.save(std);
-            });
-        }
+        Optional<Student> student = studentRepository.findById(id);
+        student.ifPresent(std -> {
+            studentResponseDTO.setId(std.getId());
+            studentResponseDTO.setName(std.getName());
+        });
 
         return  ResponseEntity.ok(studentResponseDTO);
     }
