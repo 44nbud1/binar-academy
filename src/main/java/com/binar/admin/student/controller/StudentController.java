@@ -6,6 +6,7 @@ import com.binar.admin.student.entity.Student;
 import com.binar.admin.student.repository.StudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RestController
 public class StudentController {
 
+    @Autowired
     private StudentRepository studentRepository;
 
     @GetMapping("/")
